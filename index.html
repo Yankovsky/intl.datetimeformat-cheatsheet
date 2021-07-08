@@ -2,6 +2,15 @@
 <head>
 	<meta charset="utf-8">
 	<style>
+		.header-block {
+			display: flex;
+			align-items: center;
+		}
+
+		h1 {
+			margin-right: 32px;
+		}
+
         .locale-select-block {
             font-size: 16px;
             margin-bottom: 32px;
@@ -43,7 +52,11 @@
 	</style>
 </head>
 <body>
-<h1>Intl.DateTimeFormat cheat sheet</h1>
+<div class="header-block">
+	<h1>Intl.DateTimeFormat cheat sheet</h1>
+	<a class="github-button" href="https://github.com/Yankovsky/intl.datetimeformat-cheatsheet" data-size="large"
+	   aria-label="Star Yankovsky/intl.datetimeformat-cheatshee on GitHub">Star</a>
+</div>
 <div class="locale-select-block">
 	<label for="localesSelect">Select locale:</label>
 	<select name="localesSelect" id="localesSelect">
@@ -168,5 +181,6 @@
 
   init()
 </script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 </html>
