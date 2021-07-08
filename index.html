@@ -1,0 +1,172 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+        .locale-select-block {
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+
+        select {
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            height: 60px;
+            padding: 2px 5px;
+        }
+
+        th {
+            width: 10%;
+        }
+
+        td {
+            width: 16%;
+            cursor: pointer;
+        }
+
+        td:hover {
+            background: aliceblue;
+        }
+
+        pre {
+            font-size: 16px;
+        }
+	</style>
+</head>
+<body>
+<h1>Intl.DateTimeFormat cheat sheet</h1>
+<div class="locale-select-block">
+	<label for="localesSelect">Select locale:</label>
+	<select name="localesSelect" id="localesSelect">
+		<option value="auto">use default</option>
+		<option value="de-DE">de-DE</option>
+		<option value="en-GB">en-GB</option>
+		<option value="en-US">en-US</option>
+		<option value="ru-RU">ru-RU</option>
+	</select>
+</div>
+<table>
+	<tbody>
+	<tr>
+		<th></th>
+		<th colspan="6">dateStyle</th>
+	</tr>
+	<tr>
+		<th rowspan="6">timeStyle</th>
+		<th></th>
+		<th>–</th>
+		<th>short</th>
+		<th>medium</th>
+		<th>long</th>
+		<th>full</th>
+	</tr>
+	<tr>
+		<th>–</th>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<th>short</th>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<th>medium</th>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<th>long</th>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<th>full</th>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	</tbody>
+</table>
+
+<pre id="codeTag"></pre>
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">MDN
+	Intl</a>
+<a href="https://caniuse.com/?search=Intl">Can I use Intl?</a>
+<script>
+  const localesSelect = document.getElementById('localesSelect')
+  const allTds = document.querySelectorAll('td')
+  const codeTag = document.getElementById('codeTag')
+
+  localesSelect.addEventListener('change', (e) => {
+    const params = new URLSearchParams(document.location.search)
+    let locale = e.target.value
+    params.set('locale', locale)
+    window.history.pushState({ locale: locale }, `Locale – ${ locale }`, `?${ params.toString() }`)
+    updateTable(locale)
+  })
+
+  allTds.forEach(td => {
+    td.addEventListener('click', () => {
+      const localeString = localesSelect.value === 'auto' ? 'undefined' : `'${ localesSelect.value }'`
+      const lines = [
+        `new Intl.DateTimeFormat(${ localeString }, {`,
+        td.dataset['dateStyle'] && `    dateStyle: ${ td.dataset['dateStyle'] },`,
+        td.dataset['timeStyle'] && `    timeStyle: ${ td.dataset['timeStyle'] },`,
+        '}).format(new Date())',
+        `// ${ td.innerText }`
+      ].filter(line => line).join('\n')
+      codeTag.innerText = lines
+    })
+  })
+
+  const updateTable = (locale) => {
+    const styles = [undefined, 'short', 'medium', 'long', 'full']
+    allTds.forEach((td, idx) => {
+      const dateStyle = styles[idx % styles.length]
+      const timeStyle = styles[Math.floor(idx / styles.length)]
+      td.dataset['dateStyle'] = dateStyle || ''
+      td.dataset['timeStyle'] = timeStyle || ''
+      td.innerText = new Intl.DateTimeFormat(locale === 'auto' ? undefined : locale, {
+        dateStyle,
+        timeStyle,
+      }).format(new Date())
+    })
+  }
+
+  const init = () => {
+    const params = new URLSearchParams(document.location.search)
+    const locale = params.get('locale') || 'en-GB'
+    params.set('locale', locale)
+    localesSelect.value = locale
+    window.history.replaceState({ locale }, `Locale – ${ locale }`, `?${ params.toString() }`)
+    updateTable(locale)
+  }
+
+  init()
+</script>
+</body>
+</html>
