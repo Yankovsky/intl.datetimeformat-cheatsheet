@@ -2,14 +2,14 @@
 <head>
 	<meta charset="utf-8">
 	<style>
-		.header-block {
-			display: flex;
-			align-items: center;
-		}
+        .header-block {
+            display: flex;
+            align-items: center;
+        }
 
-		h1 {
-			margin-right: 32px;
-		}
+        h1 {
+            margin-right: 32px;
+        }
 
         .locale-select-block {
             font-size: 16px;
@@ -147,8 +147,8 @@
       const localeString = localesSelect.value === 'auto' ? 'undefined' : `'${ localesSelect.value }'`
       const lines = [
         `new Intl.DateTimeFormat(${ localeString }, {`,
-        td.dataset['dateStyle'] && `    dateStyle: ${ td.dataset['dateStyle'] },`,
-        td.dataset['timeStyle'] && `    timeStyle: ${ td.dataset['timeStyle'] },`,
+        td.dataset['dateStyle'] && `    dateStyle: '${ td.dataset['dateStyle'] }',`,
+        td.dataset['timeStyle'] && `    timeStyle: '${ td.dataset['timeStyle'] }',`,
         '}).format(new Date())',
         `// ${ td.innerText }`
       ].filter(line => line).join('\n')
