@@ -12,6 +12,8 @@
         }
 
         .locale-select-block {
+            display: flex;
+            align-items: center;
             font-size: 16px;
             margin-bottom: 32px;
         }
@@ -55,7 +57,7 @@
 <div class="header-block">
 	<h1>Intl.DateTimeFormat cheat sheet</h1>
 	<a class="github-button" href="https://github.com/Yankovsky/intl.datetimeformat-cheatsheet" data-size="large"
-	   aria-label="Star Yankovsky/intl.datetimeformat-cheatshee on GitHub">Star</a>
+	   aria-label="Star Yankovsky/intl.datetimeformat-cheatsheet on GitHub">Star</a>
 </div>
 <div class="locale-select-block">
 	<label for="localesSelect">Select locale:</label>
@@ -67,6 +69,9 @@
 		<option value="fr-FR">fr-FR</option>
 		<option value="ru-RU">ru-RU</option>
 	</select>
+	<span id="resolvedLocaleContainer" style="display: none;">
+		, resolved locale: <span id="resolvedLocaleBlock"></span>
+	</span>
 </div>
 <table id="predefined-styles-table">
 	<tbody>
@@ -134,13 +139,15 @@
   const localesSelect = document.getElementById('localesSelect')
   const predefinedStylesTds = document.querySelectorAll('#predefined-styles-table td')
   const codeTag = document.getElementById('codeTag')
+  const resolvedLocaleContainer = document.getElementById('resolvedLocaleContainer')
+  const resolvedLocaleBlock = document.getElementById('resolvedLocaleBlock')
 
   localesSelect.addEventListener('change', (e) => {
     const params = new URLSearchParams(document.location.search)
     let locale = e.target.value
     params.set('locale', locale)
     window.history.pushState({ locale: locale }, `Locale – ${ locale }`, `?${ params.toString() }`)
-    updatePredefinedStylesTable(locale)
+    update(locale)
   })
 
   predefinedStylesTds.forEach(td => {
@@ -171,13 +178,24 @@
     })
   }
 
+  const update = (locale) => {
+    updatePredefinedStylesTable(locale)
+
+    if (locale === 'auto') {
+      resolvedLocaleBlock.innerText = Intl.DateTimeFormat().resolvedOptions().locale
+      resolvedLocaleContainer.style.display = 'block'
+    } else {
+      resolvedLocaleContainer.style.display = 'none'
+    }
+  }
+
   const init = () => {
     const params = new URLSearchParams(document.location.search)
     const locale = params.get('locale') || 'en-GB'
     params.set('locale', locale)
     localesSelect.value = locale
     window.history.replaceState({ locale }, `Locale – ${ locale }`, `?${ params.toString() }`)
-    updatePredefinedStylesTable(locale)
+    update(locale)
   }
 
   init()
