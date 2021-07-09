@@ -64,10 +64,11 @@
 		<option value="de-DE">de-DE</option>
 		<option value="en-GB">en-GB</option>
 		<option value="en-US">en-US</option>
+		<option value="fr-FR">fr-FR</option>
 		<option value="ru-RU">ru-RU</option>
 	</select>
 </div>
-<table>
+<table id="predefined-styles-table">
 	<tbody>
 	<tr>
 		<th></th>
@@ -131,7 +132,7 @@
 <a href="https://caniuse.com/?search=Intl">Can I use Intl?</a>
 <script>
   const localesSelect = document.getElementById('localesSelect')
-  const allTds = document.querySelectorAll('td')
+  const predefinedStylesTds = document.querySelectorAll('#predefined-styles-table td')
   const codeTag = document.getElementById('codeTag')
 
   localesSelect.addEventListener('change', (e) => {
@@ -139,10 +140,10 @@
     let locale = e.target.value
     params.set('locale', locale)
     window.history.pushState({ locale: locale }, `Locale – ${ locale }`, `?${ params.toString() }`)
-    updateTable(locale)
+    updatePredefinedStylesTable(locale)
   })
 
-  allTds.forEach(td => {
+  predefinedStylesTds.forEach(td => {
     td.addEventListener('click', () => {
       const localeString = localesSelect.value === 'auto' ? 'undefined' : `'${ localesSelect.value }'`
       const lines = [
@@ -156,9 +157,9 @@
     })
   })
 
-  const updateTable = (locale) => {
+  const updatePredefinedStylesTable = (locale) => {
     const styles = [undefined, 'short', 'medium', 'long', 'full']
-    allTds.forEach((td, idx) => {
+    predefinedStylesTds.forEach((td, idx) => {
       const dateStyle = styles[idx % styles.length]
       const timeStyle = styles[Math.floor(idx / styles.length)]
       td.dataset['dateStyle'] = dateStyle || ''
@@ -176,7 +177,7 @@
     params.set('locale', locale)
     localesSelect.value = locale
     window.history.replaceState({ locale }, `Locale – ${ locale }`, `?${ params.toString() }`)
-    updateTable(locale)
+    updatePredefinedStylesTable(locale)
   }
 
   init()
